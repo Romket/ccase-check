@@ -1,4 +1,4 @@
-# Contributing to GalacticEngine
+# Contributing to ccase-check
 
 ## Issues
 
