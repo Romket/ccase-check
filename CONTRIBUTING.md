@@ -20,7 +20,7 @@ Be as thorough as possible with testing, specifically testing things related to 
 
 ### Reviewing Pull Requests
 
-If you have the relevant programming, feel free to look through the code.
+If you have the relevant programming experience, feel free to look through the code.
   - Look for potential edge cases that may arise in conditional statements.
   - Check to see if the formatting of the code makes sense in the context of the rest of the program.
     - I understand that this is vague. Essentially, this is largely about the larger format of the structure, i.e., how it is divided up into classes, functions, and such, rather than concern about specific syntax.
