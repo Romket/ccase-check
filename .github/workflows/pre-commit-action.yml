@@ -22,10 +22,31 @@ jobs:
             clang \
             clang-format \
             clang-tidy \
-            cppcheck \
-            include-what-you-use
+            cppcheck
+
+      - name: Build include-what-you-use
+        run: |      
+          sudo apt-get update
+          sudo apt-get install -y \
+            git \
+            cmake \
+            ninja-build \
+            clang \
+            llvm \
+            libclang-dev
+      
+          git clone --depth=1 https://github.com/include-what-you-use/include-what-you-use.git
+          cd include-what-you-use
+          mkdir build && cd build
+          cmake -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DIWYU_LLVM_ROOT_PATH=/usr/lib/llvm-18 \
+            ..
+          ninja
+          sudo ninja install
+
             
-      - name: Set up Python  #Recommended way to install pre-commit (supposedly)
+      - name: Set up Python  # Recommended way to install pre-commit (supposedly)
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
