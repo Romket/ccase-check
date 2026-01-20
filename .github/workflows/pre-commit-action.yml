@@ -39,10 +39,12 @@ jobs:
       
           cd include-what-you-use
                     
-          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake -S . -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DIWYU_USE_WERROR=OFF
           ninja -C build
           sudo ninja -C build install
-
             
       - name: Set up Python  # Recommended way to install pre-commit (supposedly)
         uses: actions/setup-python@v5
