@@ -19,7 +19,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            clang \
+            clang-18 \
             clang-format \
             clang-tidy \
             cppcheck
@@ -31,9 +31,9 @@ jobs:
             git \
             cmake \
             ninja-build \
-            clang \
-            llvm \
-            libclang-dev
+            clang-18 \
+            llvm-18-dev \
+            libclang-18-dev
       
           git clone --depth=1 https://github.com/include-what-you-use/include-what-you-use.git
           cd include-what-you-use
