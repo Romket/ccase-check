@@ -1,6 +1,7 @@
 name: pre-commit
 
 on:
+  pull_request:
   push:
     branches: [ "main" ]
 
@@ -23,6 +24,7 @@ jobs:
             clang-tidy \
             cppcheck \
             include-what-you-use
+            
       - name: Set up Python  #Recommended way to install pre-commit (supposedly)
         uses: actions/setup-python@v5
         with:
