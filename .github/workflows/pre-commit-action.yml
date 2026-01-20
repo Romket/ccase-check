@@ -35,15 +35,13 @@ jobs:
             llvm-18-dev \
             libclang-18-dev
       
-          git clone --depth=1 https://github.com/include-what-you-use/include-what-you-use.git
+          git clone --depth=1 --branch llvm-18 \
+            https://github.com/include-what-you-use/include-what-you-use.git
+      
           cd include-what-you-use
-          mkdir build && cd build
-          cmake -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DIWYU_LLVM_ROOT_PATH=/usr/lib/llvm-18 \
-            ..
-          ninja
-          sudo ninja install
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          ninja -C build
+          sudo ninja -C build install
 
             
       - name: Set up Python  # Recommended way to install pre-commit (supposedly)
