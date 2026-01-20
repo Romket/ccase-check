@@ -35,13 +35,10 @@ jobs:
             llvm-18-dev \
             libclang-18-dev
       
-          git clone --depth=1 \
-            https://github.com/include-what-you-use/include-what-you-use.git
+          git clone --branch 0.18 --single-branch https://github.com/include-what-you-use/include-what-you-use.git
       
           cd include-what-you-use
-          
-          git checkout 0.18
-          
+                    
           cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
           ninja -C build
           sudo ninja -C build install
