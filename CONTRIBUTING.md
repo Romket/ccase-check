@@ -1,4 +1,4 @@
-# Contributing to GalacticEngine
+# Contributing to ccase-check
 
 ## Issues
 
@@ -20,7 +20,7 @@ Be as thorough as possible with testing, specifically testing things related to 
 
 ### Reviewing Pull Requests
 
-If you have the relevant programming, feel free to look through the code.
+If you have the relevant programming experience, feel free to look through the code.
   - Look for potential edge cases that may arise in conditional statements.
   - Check to see if the formatting of the code makes sense in the context of the rest of the program.
     - I understand that this is vague. Essentially, this is largely about the larger format of the structure, i.e., how it is divided up into classes, functions, and such, rather than concern about specific syntax.
@@ -39,6 +39,16 @@ When creating pull requests, please keep in mind the following:
     - This makes it easier to regress if issues later arise from code.
     - Ideally, every commit should work, though at this early stage this is not feasible.
   - Turn on allow edits from maintainers, so we can make any final changes if necessary.
+
+### On Pre-Commit:
+
+Just install it via your package manager and run
+
+```pre-commit install```
+
+The github actions *should* catch any cases where it did not run, and then it should be a relatively easy fix. You'll also need the clang-format and other miscellaneous tools. Thank you!
+
+As far as I know, there is no way to enforce the hooks in the .git directory.
 
 ## AI Contribution
 
