@@ -15,4 +15,3 @@ repos:
       - id: cppcheck
         args: ["--enable=all", "--language=c++", "--inline-suppr",
           "--check-level=exhaustive"]
-      - id: include-what-you-use
