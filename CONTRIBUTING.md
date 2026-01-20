@@ -40,6 +40,16 @@ When creating pull requests, please keep in mind the following:
     - Ideally, every commit should work, though at this early stage this is not feasible.
   - Turn on allow edits from maintainers, so we can make any final changes if necessary.
 
+### On Pre-Commit:
+
+Just install it via your package manager and run
+
+```pre-commit install```
+
+The github actions *should* catch any cases where it did not run, and then it should be a relatively easy fix. You'll also need the clang-format and other miscellaneous tools. Thank you!
+
+As far as I know, there is no way to enforce the hooks in the .git directory.
+
 ## AI Contribution
 
 The usage of LLMs is not specifically prohibited or recommended. However, it is the responsibility of the programmer to:
