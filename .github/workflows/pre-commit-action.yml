@@ -23,7 +23,7 @@ jobs:
             clang-format \
             clang-tidy \
             cppcheck
-            
+
       - name: Set up Python  # Recommended way to install pre-commit (supposedly)
         uses: actions/setup-python@v5
         with:
@@ -34,4 +34,3 @@ jobs:
 
       - name: Run pre-commit
         run: pre-commit run --all-files
-       
