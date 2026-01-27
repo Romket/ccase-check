@@ -46,8 +46,11 @@ endif()
 
 #add_subdirectory(lib/)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME}
+    src/main.cpp
+    src/cases.cpp
+)
 
-include_directories(${PROJECT_NAME}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 #target_link_libraries(${PROJECT_NAME} template_cpp_engine)
