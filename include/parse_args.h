@@ -28,6 +28,11 @@
 #include <string>
 #include <vector>
 
+namespace std
+{
+    namespace fs = std::filesystem;
+} // namespace std
+
 enum PathType
 {
     code,
@@ -36,21 +41,22 @@ enum PathType
 
 struct ScanInfo
 {
-    std::filesystem::path              ConfigPath;
-    std::vector<std::filesystem::path> ToScan;
+    std::fs::path              ConfigPath = ".ccase-check";
+    std::vector<std::fs::path> ToScan;
 };
 
 struct Error
 {
     enum class ErrType
     {
+        dontScan,
         noInput,
         scanPathDNE,
         configPathDNE,
+        configPathIsDirectory,
         multipleConfigs,
         unknownOption,
-        extraOptions,
-        dontScan
+        extraOptions
     };
 
     ErrType     Type;
@@ -72,7 +78,7 @@ public:
     static const std::expected<ScanInfo, Error> CommandLine(int    argc,
                                                             char** argv);
 
-    static void DisplayArgs();
+    static int DisplayErrors(const Error& err);
 
 private:
     static const std::optional<Error> handleOptions(const OptionInfo&& info);
@@ -80,6 +86,5 @@ private:
     static const std::optional<Error>
     handleCodePath(const std::string_view path, ScanInfo& info);
 
-    static void help();
-    static void version();
+    static void displayArgs();
 };

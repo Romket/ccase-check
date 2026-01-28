@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+add_compile_definitions(MAJOR_VERSION=0)
+add_compile_definitions(MINOR_VERSION=0)
+add_compile_definitions(PATCH_VERSION=1)
+
 if(NOT CMAKE_CXX_COMPILER_ID)
     set(CMAKE_CXX_COMPILER_ID "GNU")
     set(CMAKE_CXX_COMPILER "g++")
@@ -48,7 +52,9 @@ endif()
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
+
     src/cases.cpp
+    src/parse_args.cpp
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)

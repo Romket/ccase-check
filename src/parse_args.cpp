@@ -25,6 +25,8 @@
 #include <parse_args.h>
 
 #include <iostream>
+#include <type_traits>
+#include <utility>
 
 const std::expected<ScanInfo, Error> Parser::CommandLine(int argc, char** argv)
 {
@@ -57,7 +59,7 @@ const std::expected<ScanInfo, Error> Parser::CommandLine(int argc, char** argv)
         if (err) return std::unexpected(*err);
     }
 
-    if (!std::filesystem::exists(info.ConfigPath))
+    if (!std::fs::exists(info.ConfigPath))
     {
         return std::unexpected(
             Error(Error::ErrType::configPathDNE, info.ConfigPath));
@@ -66,19 +68,40 @@ const std::expected<ScanInfo, Error> Parser::CommandLine(int argc, char** argv)
     return info;
 }
 
-void Parser::DisplayArgs()
+int Parser::DisplayErrors(const Error& err)
 {
-    std::cout << "\
-Usage: ccase-check [options] <input files>\n\n\
-Options:\n\n\
-Generic Options:\n\n\
-  --help                        - Display this message\n\
-  --version                     - Display the version of this program\n\n\
-ccase-check options:\n\n\
-  --config=<config path>        - Override the default config path If not\n\
-                                  specified, the program will look for a\n\
-                                  .ccase-check file in the current directory."
-              << std::endl;
+    switch (err.Type)
+    {
+        case Error::ErrType::noInput:
+            std::cout << "Error: no input files specified\n";
+            break;
+        case Error::ErrType::scanPathDNE:
+            std::cout << "Error: scan path specified does not exist: "
+                      << err.Info << '\n';
+            break;
+        case Error::ErrType::configPathDNE:
+            std::cout << "Error: config path specified does not exist: "
+                      << err.Info << '\n';
+            break;
+        case Error::ErrType::configPathIsDirectory:
+            std::cout << "Error: config path specified is not a directory: "
+                      << err.Info << '\n';
+            break;
+        case Error::ErrType::multipleConfigs:
+            std::cout << "Error: multiple config paths specified: " << err.Info
+                      << '\n';
+            break;
+        case Error::ErrType::unknownOption:
+            std::cout << "Error: unknown option: " << err.Info << '\n';
+            break;
+        case Error::ErrType::extraOptions:
+            std::cout << "Error: too many arguments given\n";
+            break;
+        case Error::ErrType::dontScan: return 0;
+    }
+
+    displayArgs();
+    return std::to_underlying(err.Type);
 }
 
 const std::optional<Error> Parser::handleOptions(const OptionInfo&& info)
@@ -93,11 +116,22 @@ const std::optional<Error> Parser::handleOptions(const OptionInfo&& info)
         }
 
         info.Scan.ConfigPath = std::move(info.Arg.substr(9));
+
+        if (!std::fs::exists(info.Scan.ConfigPath))
+        {
+            return Error(Error::ErrType::configPathDNE, info.Scan.ConfigPath);
+        }
+
+        if (std::fs::is_directory(info.Scan.ConfigPath))
+        {
+            return Error(Error::ErrType::configPathIsDirectory,
+                         info.Scan.ConfigPath);
+        }
     }
     else if (info.Option.substr(0, 4) == "help")
     {
         if (info.Argc != 2) return Error(Error::ErrType::extraOptions);
-        DisplayArgs();
+        displayArgs();
         return Error(Error::ErrType::dontScan);
     }
     else if (info.Option.substr(0, 7) == "version")
@@ -115,12 +149,27 @@ const std::optional<Error> Parser::handleOptions(const OptionInfo&& info)
     return std::nullopt;
 }
 
+void Parser::displayArgs()
+{
+    std::cout << "\
+Usage: ccase-check [options] <input files>\n\n\
+Options:\n\n\
+Generic Options:\n\n\
+  --help                        - Display this message\n\
+  --version                     - Display the version of this program\n\n\
+ccase-check options:\n\n\
+  --config=<config path>        - Override the default config path If not\n\
+                                  specified, the program will look for a\n\
+                                  .ccase-check file in the current directory."
+              << std::endl;
+}
+
 const std::optional<Error> Parser::handleCodePath(std::string_view path,
                                                   ScanInfo&        info)
 {
-    std::filesystem::path codePath = std::filesystem::path(std::move(path));
+    std::fs::path codePath = std::move(path);
 
-    if (!std::filesystem::exists(codePath))
+    if (!std::fs::exists(codePath))
     {
         return Error(Error::ErrType::scanPathDNE, codePath);
     }

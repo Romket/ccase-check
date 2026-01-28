@@ -24,43 +24,9 @@
 
 #include <parse_args.h>
 
-#include <iostream>
-
 int main(int argc, char** argv)
 {
     auto parsedArgs = Parser::CommandLine(argc, argv);
 
-    if (!parsedArgs)
-    {
-        Error& err = parsedArgs.error();
-        switch (err.Type)
-        {
-            case Error::ErrType::noInput:
-                std::cout << "Error: no input files specified" << std::endl;
-                break;
-            case Error::ErrType::scanPathDNE:
-                std::cout << "Error: scan path specified does not exist:"
-                          << err.Info << std::endl;
-                break;
-            case Error::ErrType::configPathDNE:
-                std::cout << "Error: config path specified does not exist:"
-                          << err.Info << std::endl;
-                break;
-            case Error::ErrType::multipleConfigs:
-                std::cout << "Error: multiple config paths specified: "
-                          << err.Info << std::endl;
-                break;
-            case Error::ErrType::unknownOption:
-                std::cout << "Error: unknown option: " << err.Info << std::endl;
-                break;
-            case Error::ErrType::extraOptions:
-                std::cout << "Error: too many arguments given" << std::endl;
-                break;
-            case Error::ErrType::dontScan: return 0;
-        }
-
-        Parser::DisplayArgs();
-
-        return 1;
-    }
+    if (!parsedArgs) return Parser::DisplayErrors(parsedArgs.error());
 }
