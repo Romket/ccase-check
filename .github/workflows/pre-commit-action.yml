@@ -19,8 +19,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            clang-18 \
-            clang-format
+            clang-21 \
+            clang-format-21
 
       - name: Set up Python  # Recommended way to install pre-commit (supposedly)
         uses: actions/setup-python@v5
