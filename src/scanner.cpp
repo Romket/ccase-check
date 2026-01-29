@@ -1,9 +1,9 @@
 /**
- * @file scanner.h
+ * @file scanner.cpp
  * @author Luke Houston (Romket) (lukehouston08@gmail.com)
- * @brief definition for Scanner class
+ * @brief Scanner class implementation
  * @version 0.1
- * @date 2026-01-16
+ * @date 2026-01-27
  *
  * @copyright Copyright (c) 2026 Luke Houston
  *
@@ -22,25 +22,33 @@
  *
  */
 
-#include <filesystem>
-#include <vector>
+#include <scanner.h>
 
-struct ScanInfo
+#include <ryml.hpp>
+
+#include <fstream>
+
+Scanner::Scanner(const ScanInfo&& info)
 {
-    std::filesystem::path              ConfigPath = ".ccase-check";
-    std::vector<std::filesystem::path> ToScan;
-};
+    _configPath = std::move(info.ConfigPath);
+    _toScan     = std::move(info.ToScan);
+}
 
-class Scanner
+bool Scanner::StartScan()
 {
-public:
-    Scanner(const ScanInfo&& info);
+    if (!loadConfig()) return false;
 
-    bool StartScan();
+    return true;
+}
 
-private:
-    bool loadConfig();
+bool Scanner::loadConfig()
+{
+    std::string configText;
+    std::ifstream(_configPath) >> configText;
 
-    std::filesystem::path              _configPath;
-    std::vector<std::filesystem::path> _toScan;
-};
+    ryml::Tree confTree = ryml::parse_in_place(ryml::to_substr(configText));
+
+    for (const ryml::ConstNodeRef& node : confTree.rootref()) {}
+
+    return true;
+}

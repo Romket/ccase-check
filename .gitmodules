@@ -1,0 +1,4 @@
+s
+[submodule "lib/ryml"]
+	path = lib/ryml
+	url = https://github.com/biojppm/rapidyaml.git

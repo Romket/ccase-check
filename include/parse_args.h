@@ -22,27 +22,16 @@
  *
  */
 
+#include <scanner.h>
+
 #include <expected>
-#include <filesystem>
 #include <optional>
 #include <string>
-#include <vector>
-
-namespace std
-{
-    namespace fs = std::filesystem;
-} // namespace std
 
 enum PathType
 {
     code,
     configFile
-};
-
-struct ScanInfo
-{
-    std::fs::path              ConfigPath = ".ccase-check";
-    std::vector<std::fs::path> ToScan;
 };
 
 struct Error

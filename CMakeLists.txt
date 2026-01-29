@@ -48,8 +48,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
     endif()
 endif()
 
-#add_subdirectory(lib/)
-
 add_executable(${PROJECT_NAME}
     src/main.cpp
 
@@ -57,6 +55,11 @@ add_executable(${PROJECT_NAME}
     src/parse_args.cpp
 )
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_subdirectory(lib/ryml)
 
-#target_link_libraries(${PROJECT_NAME} template_cpp_engine)
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        ryml::ryml
+)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)

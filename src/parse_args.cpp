@@ -25,7 +25,6 @@
 #include <parse_args.h>
 
 #include <iostream>
-#include <type_traits>
 #include <utility>
 
 const std::expected<ScanInfo, Error> Parser::CommandLine(int argc, char** argv)
@@ -59,7 +58,7 @@ const std::expected<ScanInfo, Error> Parser::CommandLine(int argc, char** argv)
         if (err) return std::unexpected(*err);
     }
 
-    if (!std::fs::exists(info.ConfigPath))
+    if (!std::filesystem::exists(info.ConfigPath))
     {
         return std::unexpected(
             Error(Error::ErrType::configPathDNE, info.ConfigPath));
@@ -117,12 +116,12 @@ const std::optional<Error> Parser::handleOptions(const OptionInfo&& info)
 
         info.Scan.ConfigPath = std::move(info.Arg.substr(9));
 
-        if (!std::fs::exists(info.Scan.ConfigPath))
+        if (!std::filesystem::exists(info.Scan.ConfigPath))
         {
             return Error(Error::ErrType::configPathDNE, info.Scan.ConfigPath);
         }
 
-        if (std::fs::is_directory(info.Scan.ConfigPath))
+        if (std::filesystem::is_directory(info.Scan.ConfigPath))
         {
             return Error(Error::ErrType::configPathIsDirectory,
                          info.Scan.ConfigPath);
@@ -167,9 +166,9 @@ ccase-check options:\n\n\
 const std::optional<Error> Parser::handleCodePath(std::string_view path,
                                                   ScanInfo&        info)
 {
-    std::fs::path codePath = std::move(path);
+    std::filesystem::path codePath = std::move(path);
 
-    if (!std::fs::exists(codePath))
+    if (!std::filesystem::exists(codePath))
     {
         return Error(Error::ErrType::scanPathDNE, codePath);
     }
