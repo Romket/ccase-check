@@ -18,8 +18,15 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            clang
+  
+      - name: Install Clang-Format 21
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 21
+          sudo apt-get install -y clang-format-21
+          # Create a symlink so 'clang-format' defaults to v21
+          sudo ln -s /usr/bin/clang-format-21 /usr/local/bin/clang-format
 
       - name: Set up Python  # Recommended way to install pre-commit (supposedly)
         uses: actions/setup-python@v5
