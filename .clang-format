@@ -20,7 +20,7 @@ AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: 'Yes'
 BinPackArguments: true
-BinPackParameters: AlwaysOnePerLine
+BinPackParameters: BinPack
 BreakBeforeBraces: Custom
 BreakBeforeTernaryOperators: false
 BreakConstructorInitializers: AfterColon
