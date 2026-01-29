@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-  
+
       - name: Install Clang-Format 21
         run: |
           wget https://apt.llvm.org/llvm.sh
