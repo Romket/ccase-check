@@ -22,6 +22,8 @@
  *
  */
 
+#pragma once
+
 #include <scanner.h>
 
 #include <expected>

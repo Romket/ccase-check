@@ -22,6 +22,8 @@
  *
  */
 
+#pragma once
+
 #include <heterogeneous_lookup.h>
 
 #include <regex>

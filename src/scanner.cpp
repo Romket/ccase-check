@@ -46,9 +46,9 @@ bool Scanner::loadConfig()
     std::string configText;
     std::ifstream(_configPath) >> configText;
 
-    ryml::Tree confTree = ryml::parse_in_place(ryml::to_substr(configText));
+    // ryml::Tree confTree = ryml::parse_in_place(ryml::to_substr(configText));
 
-    for (const ryml::ConstNodeRef& node : confTree.rootref()) {}
+    // for (const ryml::ConstNodeRef& node : confTree.rootref()) {}
 
     return true;
 }

@@ -53,6 +53,7 @@ add_executable(${PROJECT_NAME}
 
     src/cases.cpp
     src/parse_args.cpp
+    src/scanner.cpp
 )
 
 add_subdirectory(lib/ryml)

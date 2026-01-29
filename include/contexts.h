@@ -22,6 +22,8 @@
  *
  */
 
+#pragma once
+
 enum class Contexts
 {
     // Base contexts
