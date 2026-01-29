@@ -22,6 +22,12 @@
  *
  */
 
+// temp: this is a temp definition to get tests to pass
+#define MAJOR_VERSION 0
+#define MINOR_VERSION 1
+#define PATCH_VERSION 0
+// temp this is a temp remove this later
+
 #include <parse_args.h>
 
 #include <iostream>
