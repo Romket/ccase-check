@@ -51,7 +51,7 @@ struct Error
     };
 
     ErrType     Type;
-    std::string Info;
+    std::string Info {};
 };
 
 struct OptionInfo

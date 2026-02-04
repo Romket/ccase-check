@@ -31,5 +31,5 @@ std::regex Convert::GetRegex(std::string_view typeString)
         return _caseNameToPattern.find(typeString)->second;
     }
 
-    return std::regex(std::string(typeString));
+    return std::regex {std::string {typeString}};
 }

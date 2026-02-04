@@ -24,6 +24,7 @@
 
 #include <scanner.h>
 
+#include <c4/std/string.hpp>
 #include <ryml.hpp>
 
 #include <fstream>
@@ -43,12 +44,13 @@ bool Scanner::StartScan()
 
 bool Scanner::loadConfig()
 {
-    std::string configText;
-    std::ifstream(_configPath) >> configText;
+    std::ifstream file {_configPath};
+    std::string   configText {std::istreambuf_iterator<char>(file),
+                            std::istreambuf_iterator<char>()};
 
-    // ryml::Tree confTree = ryml::parse_in_place(ryml::to_substr(configText));
+    ryml::Tree confTree {ryml::parse_in_place(ryml::to_substr(configText))};
 
-    // for (const ryml::ConstNodeRef& node : confTree.rootref()) {}
+    for (const ryml::ConstNodeRef& node : confTree.rootref()) {}
 
     return true;
 }

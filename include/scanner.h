@@ -29,7 +29,7 @@
 
 struct ScanInfo
 {
-    std::filesystem::path              ConfigPath = ".ccase-check";
+    std::filesystem::path              ConfigPath {".ccase-check"};
     std::vector<std::filesystem::path> ToScan;
 };
 

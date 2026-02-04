@@ -29,39 +29,38 @@
 
 const std::expected<ScanInfo, Error> Parser::CommandLine(int argc, char** argv)
 {
-    if (argc == 1) return std::unexpected(Error(Error::ErrType::noInput));
+    if (argc == 1) return std::unexpected {Error {Error::ErrType::noInput}};
 
     ScanInfo info;
-    bool     configSpecified = false;
-
+    bool     configSpecified {false};
     for (int i = 1; i < argc; ++i)
     {
-        if (std::string_view(argv[i]).length() < 3)
+        if (std::string_view {argv[i]}.length() < 3)
         {
-            auto err = handleCodePath(argv[i], info);
-            if (err) return std::unexpected(*err);
+            auto err {handleCodePath(argv[i], info)};
+            if (err) return std::unexpected {*err};
             continue;
         }
 
-        std::string_view isOption = std::string_view(argv[i]).substr(0, 2);
-        std::string_view option   = std::string_view(argv[i]).substr(2);
+        std::string_view isOption {std::string_view(argv[i]).substr(0, 2)};
+        std::string_view option {std::string_view(argv[i]).substr(2)};
 
         if (isOption == "--")
         {
-            auto err =
-                handleOptions({option, argv[i], argc, info, configSpecified});
-            if (err) return std::unexpected(*err);
+            auto err {
+                handleOptions({option, argv[i], argc, info, configSpecified})};
+            if (err) return std::unexpected {*err};
             continue;
         }
 
-        auto err = handleCodePath(argv[i], info);
-        if (err) return std::unexpected(*err);
+        auto err {handleCodePath(argv[i], info)};
+        if (err) return std::unexpected {*err};
     }
 
     if (!std::filesystem::exists(info.ConfigPath))
     {
-        return std::unexpected(
-            Error(Error::ErrType::configPathDNE, info.ConfigPath));
+        return std::unexpected {
+            Error {Error::ErrType::configPathDNE, info.ConfigPath}};
     }
 
     return info;
@@ -109,40 +108,40 @@ const std::optional<Error> Parser::handleOptions(const OptionInfo&& info)
     {
         if (info.ConfigPathSpecified)
         {
-            return Error(Error::ErrType::multipleConfigs,
-                         std::string(info.Scan.ConfigPath) + " and " +
-                             std::string(info.Arg.substr(9)));
+            return Error {Error::ErrType::multipleConfigs,
+                          std::string {info.Scan.ConfigPath} + " and " +
+                              std::string {info.Arg.substr(9)}};
         }
 
         info.Scan.ConfigPath = std::move(info.Arg.substr(9));
 
         if (!std::filesystem::exists(info.Scan.ConfigPath))
         {
-            return Error(Error::ErrType::configPathDNE, info.Scan.ConfigPath);
+            return Error {Error::ErrType::configPathDNE, info.Scan.ConfigPath};
         }
 
         if (std::filesystem::is_directory(info.Scan.ConfigPath))
         {
-            return Error(Error::ErrType::configPathIsDirectory,
-                         info.Scan.ConfigPath);
+            return Error {Error::ErrType::configPathIsDirectory,
+                          info.Scan.ConfigPath};
         }
     }
     else if (info.Option.substr(0, 4) == "help")
     {
-        if (info.Argc != 2) return Error(Error::ErrType::extraOptions);
+        if (info.Argc != 2) return Error {Error::ErrType::extraOptions};
         displayArgs();
-        return Error(Error::ErrType::dontScan);
+        return Error {Error::ErrType::dontScan};
     }
     else if (info.Option.substr(0, 7) == "version")
     {
-        if (info.Argc != 2) return Error(Error::ErrType::extraOptions);
+        if (info.Argc != 2) return Error {Error::ErrType::extraOptions};
         std::cout << "ccase-check version " << MAJOR_VERSION << '.'
                   << MINOR_VERSION << '.' << PATCH_VERSION << std::endl;
-        return Error(Error::ErrType::dontScan);
+        return Error {Error::ErrType::dontScan};
     }
     else
     {
-        return Error(Error::ErrType::unknownOption, std::string(info.Arg));
+        return Error {Error::ErrType::unknownOption, std::string(info.Arg)};
     }
 
     return std::nullopt;
@@ -166,11 +165,11 @@ ccase-check options:\n\n\
 const std::optional<Error> Parser::handleCodePath(std::string_view path,
                                                   ScanInfo&        info)
 {
-    std::filesystem::path codePath = std::move(path);
+    std::filesystem::path codePath {std::move(path)};
 
     if (!std::filesystem::exists(codePath))
     {
-        return Error(Error::ErrType::scanPathDNE, codePath);
+        return Error {Error::ErrType::scanPathDNE, codePath};
     }
 
     info.ToScan.push_back(std::move(codePath));

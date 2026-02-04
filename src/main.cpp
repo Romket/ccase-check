@@ -29,12 +29,12 @@
 
 int main(int argc, char** argv)
 {
-    auto parsedArgs = Parser::CommandLine(argc, argv);
+    auto parsedArgs {Parser::CommandLine(argc, argv)};
 
     if (!parsedArgs) return Parser::DisplayErrors(parsedArgs.error());
 
-    std::unique_ptr<Scanner> scan =
-        std::make_unique<Scanner>(std::move(parsedArgs.value()));
+    std::unique_ptr<Scanner> scan {
+        std::make_unique<Scanner>(std::move(parsedArgs.value()))};
 
     scan->StartScan();
 }

@@ -39,7 +39,7 @@ public:
 private:
     inline static const std::unordered_map<std::string, std::regex, stringHash,
                                            std::equal_to<>>
-        _caseNameToPattern = {
+        _caseNameToPattern {
             {"CamelCase", std::regex("[a-z][A-Za-z0-9]*")},
             {"PascalCase", std::regex("[A-Z][A-Z0-9]*[a-z][A-Za-z0-9]*")},
             {"SnakeCase", std::regex("[a-z]+(?:_|[a-z0-9])*")},
