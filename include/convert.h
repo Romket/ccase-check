@@ -44,10 +44,10 @@ private:
                                            std::equal_to<>>
         _caseNameToPattern {
             {"CamelCase", std::regex("[a-z][A-Za-z0-9]*")},
-            {"PascalCase", std::regex("[A-Z][A-Z0-9]*[a-z][A-Za-z0-9]*")},
-            {"SnakeCase", std::regex("[a-z]+(?:_|[a-z0-9])*")},
-            {"ScreamingSnakeCase", std::regex("[A-Z]+(?:_|[A-Z0-9])*")},
-            {"KebabCase", std::regex("[a-z]+(?:-|[a-z0-9])*")},
+            {"PascalCase", std::regex("[A-Z][A-Za-z0-9]*")},
+            {"SnakeCase", std::regex("[a-z](?:_|[a-z0-9])*")},
+            {"ScreamingSnakeCase", std::regex("[A-Z](?:_|[A-Z0-9])*")},
+            {"KebabCase", std::regex("[a-z](?:-|[a-z0-9])*")},
             {"TrainCase", std::regex("[A-Z](?:-[A-Z]|[a-z0-9])*")},
             {"FlatCase", std::regex("[a-z0-9]*")}};
 
