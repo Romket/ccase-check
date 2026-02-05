@@ -24,6 +24,8 @@
 
 #include <scanner.h>
 
+#include <convert.h>
+
 #include <c4/std/string.hpp>
 #include <ryml.hpp>
 
@@ -35,22 +37,43 @@ Scanner::Scanner(const ScanInfo&& info)
     _toScan     = std::move(info.ToScan);
 }
 
-bool Scanner::StartScan()
+std::optional<std::string> Scanner::StartScan()
 {
-    if (!loadConfig()) return false;
+    auto err = loadConfig();
+    if (err) return err;
 
-    return true;
+    return std::nullopt;
 }
 
-bool Scanner::loadConfig()
+std::optional<std::string> Scanner::loadConfig()
 {
     std::ifstream file {_configPath};
-    std::string   configText {std::istreambuf_iterator<char>(file),
+    if (!file) return "Failed to load file";
+
+    std::string configText {std::istreambuf_iterator<char>(file),
                             std::istreambuf_iterator<char>()};
 
     ryml::Tree confTree {ryml::parse_in_place(ryml::to_substr(configText))};
 
-    for (const ryml::ConstNodeRef& node : confTree.rootref()) {}
+    for (const ryml::ConstNodeRef&& node : confTree.rootref())
+    {
+        try
+        {
+            Contexts c = Convert::StrToContext(std::string_view {node.key()});
+            if (_patternMap.find(c) != _patternMap.end())
+            {
+                return "Duplicate argument " + std::string {node.key().str};
+            }
 
-    return true;
+            _patternMap.emplace(std::pair {
+                std::move(c),
+                Convert::CaseNameToRegex(std::string_view {node.val()})});
+        }
+        catch (const std::exception& e)
+        {
+            return e.what();
+        }
+    }
+
+    return std::nullopt;
 }

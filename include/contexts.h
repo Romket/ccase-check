@@ -30,10 +30,11 @@ enum class Contexts
     cClass,
     cStruct,
     cEnum,
-    cFunction,
-    cVariable,
     cMacro,
     cNamespace,
+
+    cFunction,
+    cVariable,
 
     // With access modifiers
     cPublicFunction,

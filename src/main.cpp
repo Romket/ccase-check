@@ -25,6 +25,7 @@
 #include <parse_args.h>
 #include <scanner.h>
 
+#include <iostream>
 #include <memory>
 
 int main(int argc, char** argv)
@@ -36,5 +37,10 @@ int main(int argc, char** argv)
     std::unique_ptr<Scanner> scan {
         std::make_unique<Scanner>(std::move(parsedArgs.value()))};
 
-    scan->StartScan();
+    auto e = scan->StartScan();
+    if (e)
+    {
+        std::cout << *e << std::endl;
+        return 1;
+    }
 }

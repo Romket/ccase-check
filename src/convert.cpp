@@ -22,14 +22,21 @@
  *
  */
 
-#include <cases.h>
+#include <convert.h>
 
-std::regex Convert::GetRegex(std::string_view typeString)
+std::regex Convert::CaseNameToRegex(std::string_view typeString)
 {
-    if (_caseNameToPattern.find(typeString) != _caseNameToPattern.end())
-    {
-        return _caseNameToPattern.find(typeString)->second;
-    }
+    auto it = _caseNameToPattern.find(typeString);
+    if (it != _caseNameToPattern.end()) return it->second;
 
-    return std::regex {std::string {typeString}};
+    return std::regex {std::move(std::string {typeString})};
+}
+
+Contexts Convert::StrToContext(std::string_view contextString)
+{
+    auto it = _strToContext.find(contextString);
+    if (it != _strToContext.end()) return it->second;
+
+    throw std::invalid_argument {"Invalid option \"" +
+                                 std::string {contextString} + "\"."};
 }

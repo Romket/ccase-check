@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <contexts.h>
 #include <heterogeneous_lookup.h>
 
 #include <regex>
@@ -34,7 +35,9 @@
 class Convert
 {
 public:
-    static std::regex GetRegex(std::string_view typeString);
+    static std::regex CaseNameToRegex(std::string_view typeString);
+
+    static Contexts StrToContext(std::string_view contextString);
 
 private:
     inline static const std::unordered_map<std::string, std::regex, stringHash,
@@ -47,4 +50,20 @@ private:
             {"KebabCase", std::regex("[a-z]+(?:-|[a-z0-9])*")},
             {"TrainCase", std::regex("[A-Z](?:-[A-Z]|[a-z0-9])*")},
             {"FlatCase", std::regex("[a-z0-9]*")}};
+
+    inline static const std::unordered_map<std::string, Contexts, stringHash,
+                                           std::equal_to<>>
+        _strToContext {{"classDef", Contexts::cClass},
+                       {"structDef", Contexts::cStruct},
+                       {"enumDef", Contexts::cEnum},
+
+                       {"globalFunc", Contexts::cFunction},
+                       {"globalVar", Contexts::cVariable},
+
+                       {"publicFunc", Contexts::cPublicFunction},
+                       {"publicVar", Contexts::cPublicVariable},
+                       {"protectedFunc", Contexts::cProtectedFunction},
+                       {"protectedVar", Contexts::cProtectedVariable},
+                       {"privateFunc", Contexts::cPrivateFunction},
+                       {"privateVar", Contexts::cPrivateVariable}};
 };

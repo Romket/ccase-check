@@ -24,7 +24,13 @@
 
 #pragma once
 
+#include <contexts.h>
+
 #include <filesystem>
+#include <optional>
+#include <regex>
+#include <string>
+#include <unordered_map>
 #include <vector>
 
 struct ScanInfo
@@ -38,10 +44,12 @@ class Scanner
 public:
     Scanner(const ScanInfo&& info);
 
-    bool StartScan();
+    std::optional<std::string> StartScan();
 
 private:
-    bool loadConfig();
+    std::optional<std::string> loadConfig();
+
+    std::unordered_map<Contexts, std::regex> _patternMap;
 
     std::filesystem::path              _configPath;
     std::vector<std::filesystem::path> _toScan;

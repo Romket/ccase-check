@@ -51,7 +51,7 @@ endif()
 add_executable(${PROJECT_NAME}
     src/main.cpp
 
-    src/cases.cpp
+    src/convert.cpp
     src/parse_args.cpp
     src/scanner.cpp
 )
