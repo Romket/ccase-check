@@ -34,6 +34,7 @@
 struct ScanInfo
 {
     std::filesystem::path              ConfigPath {".ccase-check"};
+    std::filesystem::path              IgnorePath {".ccase-check-ignore"};
     std::vector<std::filesystem::path> ToScan;
 };
 
@@ -45,13 +46,17 @@ public:
     int Run();
 
 private:
-    int loadConfig();
+    int  loadConfig();
+    void loadIgnore();
 
     bool scanDir(const std::filesystem::path&& dir);
     bool scanFile(const std::filesystem::path&& file);
 
     std::unordered_map<Contexts, std::regex> _patternMap;
 
+    std::vector<std::regex> _ignorePatterns;
+
     std::filesystem::path              _configPath;
+    std::filesystem::path              _ignorePath;
     std::vector<std::filesystem::path> _toScan;
 };

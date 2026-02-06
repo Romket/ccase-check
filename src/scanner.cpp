@@ -35,6 +35,7 @@
 Scanner::Scanner(const ScanInfo&& info)
 {
     _configPath = std::move(info.ConfigPath);
+    _ignorePath = std::move(info.IgnorePath);
     _toScan     = std::move(info.ToScan);
 }
 
@@ -99,6 +100,13 @@ int Scanner::loadConfig()
     }
 
     return 0;
+}
+
+void Scanner::loadIgnore()
+{
+    if (!std::filesystem::exists(_ignorePath) ||
+        !std::filesystem::is_regular_file(_ignorePath))
+        return;
 }
 
 bool Scanner::scanDir(const std::filesystem::path&& dir)

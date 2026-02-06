@@ -63,6 +63,12 @@ const std::expected<ScanInfo, Error> Parser::CommandLine(int argc, char** argv)
             Error {Error::ErrType::configPathDNE, info.ConfigPath}};
     }
 
+    if (!std::filesystem::is_regular_file(info.ConfigPath))
+    {
+        return std::unexpected {
+            Error {Error::ErrType::configPathNotFile, info.ConfigPath}};
+    }
+
     return info;
 }
 
@@ -81,12 +87,23 @@ int Parser::DisplayErrors(const Error& err)
             std::cout << "Error: config path specified does not exist: "
                       << err.Info << '\n';
             break;
-        case Error::ErrType::configPathIsDirectory:
-            std::cout << "Error: config path specified is not a directory: "
+        case Error::ErrType::ignorePathDNE:
+            std::cout << "Error: ignore file specified does not exist: "
+                      << err.Info << '\n';
+        case Error::ErrType::configPathNotFile:
+            std::cout << "Error: config path specified is not a file: "
+                      << err.Info << '\n';
+            break;
+        case Error::ErrType::ignorePathNotFile:
+            std::cout << "Error: ignore file specified is not a file: "
                       << err.Info << '\n';
             break;
         case Error::ErrType::multipleConfigs:
             std::cout << "Error: multiple config paths specified: " << err.Info
+                      << '\n';
+            break;
+        case Error::ErrType::multipleIgnores:
+            std::cout << "Error: multiple ignore paths specified: " << err.Info
                       << '\n';
             break;
         case Error::ErrType::unknownOption:
@@ -120,10 +137,32 @@ const std::optional<Error> Parser::handleOptions(const OptionInfo&& info)
             return Error {Error::ErrType::configPathDNE, info.Scan.ConfigPath};
         }
 
-        if (std::filesystem::is_directory(info.Scan.ConfigPath))
+        if (!std::filesystem::is_regular_file(info.Scan.ConfigPath))
         {
-            return Error {Error::ErrType::configPathIsDirectory,
+            return Error {Error::ErrType::configPathNotFile,
                           info.Scan.ConfigPath};
+        }
+    }
+    else if (info.Option.substr(0, 7) == "ignore=")
+    {
+        if (info.IgnorePathSpecified)
+        {
+            return Error {Error::ErrType::multipleIgnores,
+                          std::string {info.Scan.IgnorePath} + " and " +
+                              std::string {info.Arg.substr(9)}};
+        }
+
+        info.Scan.IgnorePath = std::move(info.Arg.substr(9));
+
+        if (!std::filesystem::exists(info.Scan.IgnorePath))
+        {
+            return Error {Error::ErrType::ignorePathDNE, info.Scan.IgnorePath};
+        }
+
+        if (!std::filesystem::is_regular_file(info.Scan.IgnorePath))
+        {
+            return Error {Error::ErrType::ignorePathNotFile,
+                          info.Scan.IgnorePath};
         }
     }
     else if (info.Option.substr(0, 4) == "help")

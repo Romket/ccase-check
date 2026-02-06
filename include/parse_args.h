@@ -40,14 +40,17 @@ struct Error
 {
     enum class ErrType
     {
-        dontScan              = 0,
-        noInput               = 2,
-        scanPathDNE           = 3,
-        configPathDNE         = 4,
-        configPathIsDirectory = 5,
-        multipleConfigs       = 6,
-        unknownOption         = 7,
-        extraOptions          = 8
+        dontScan          = 0,
+        noInput           = 2,
+        scanPathDNE       = 3,
+        configPathDNE     = 4,
+        ignorePathDNE     = 5,
+        configPathNotFile = 6,
+        ignorePathNotFile = 7,
+        multipleConfigs   = 8,
+        multipleIgnores   = 9,
+        unknownOption     = 10,
+        extraOptions      = 11
     };
 
     ErrType     Type;
@@ -61,6 +64,7 @@ struct OptionInfo
     int              Argc;
     ScanInfo&        Scan;
     bool             ConfigPathSpecified;
+    bool             IgnorePathSpecified;
 };
 
 class Parser
