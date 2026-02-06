@@ -40,14 +40,14 @@ struct Error
 {
     enum class ErrType
     {
-        dontScan,
-        noInput,
-        scanPathDNE,
-        configPathDNE,
-        configPathIsDirectory,
-        multipleConfigs,
-        unknownOption,
-        extraOptions
+        dontScan              = 0,
+        noInput               = 2,
+        scanPathDNE           = 3,
+        configPathDNE         = 4,
+        configPathIsDirectory = 5,
+        multipleConfigs       = 6,
+        unknownOption         = 7,
+        extraOptions          = 8
     };
 
     ErrType     Type;
