@@ -27,9 +27,7 @@
 #include <contexts.h>
 
 #include <filesystem>
-#include <optional>
 #include <regex>
-#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -44,10 +42,10 @@ class Scanner
 public:
     Scanner(const ScanInfo&& info);
 
-    std::optional<std::string> StartScan();
+    int Run();
 
 private:
-    std::optional<std::string> loadConfig();
+    int loadConfig();
 
     std::unordered_map<Contexts, std::regex> _patternMap;
 

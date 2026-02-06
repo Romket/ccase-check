@@ -30,6 +30,7 @@
 #include <ryml.hpp>
 
 #include <fstream>
+#include <iostream>
 
 Scanner::Scanner(const ScanInfo&& info)
 {
@@ -37,18 +38,21 @@ Scanner::Scanner(const ScanInfo&& info)
     _toScan     = std::move(info.ToScan);
 }
 
-std::optional<std::string> Scanner::StartScan()
+int Scanner::Run()
 {
-    auto err = loadConfig();
-    if (err) return err;
+    if (int err = loadConfig() != 0) return err;
 
-    return std::nullopt;
+    return 0;
 }
 
-std::optional<std::string> Scanner::loadConfig()
+int Scanner::loadConfig()
 {
     std::ifstream file {_configPath};
-    if (!file) return "Failed to load file";
+    if (!file)
+    {
+        std::cout << "Failed to load file\n";
+        return -1;
+    }
 
     std::string configText {std::istreambuf_iterator<char>(file),
                             std::istreambuf_iterator<char>()};
@@ -62,7 +66,8 @@ std::optional<std::string> Scanner::loadConfig()
             Contexts c = Convert::StrToContext(std::string_view {node.key()});
             if (_patternMap.find(c) != _patternMap.end())
             {
-                return "Duplicate argument " + std::string {node.key().str};
+                std::cout << "Duplicate argument " << node.key() << '\n';
+                return 10;
             }
 
             _patternMap.emplace(std::pair {
@@ -71,9 +76,10 @@ std::optional<std::string> Scanner::loadConfig()
         }
         catch (const std::exception& e)
         {
-            return e.what();
+            std::cout << e.what() << '\n';
+            return 10;
         }
     }
 
-    return std::nullopt;
+    return 0;
 }
