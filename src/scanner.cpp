@@ -42,6 +42,23 @@ int Scanner::Run()
 {
     if (int err = loadConfig() != 0) return err;
 
+    for (const auto& path : _toScan)
+    {
+        if (std::filesystem::is_directory(path))
+        {
+            if (!scanDir(std::move(path))) return 1;
+        }
+        else if (std::filesystem::is_regular_file(path))
+        {
+            if (!scanFile(std::move(path))) return 1;
+        }
+        else
+        {
+            std::cout << "Invalid file found: " << path << '\n';
+            return -2;
+        }
+    }
+
     return 0;
 }
 
@@ -67,7 +84,7 @@ int Scanner::loadConfig()
             if (_patternMap.find(c) != _patternMap.end())
             {
                 std::cout << "Duplicate argument " << node.key() << '\n';
-                return 10;
+                return -10;
             }
 
             _patternMap.emplace(std::pair {
@@ -77,9 +94,40 @@ int Scanner::loadConfig()
         catch (const std::exception& e)
         {
             std::cout << e.what() << '\n';
-            return 10;
+            return -10;
         }
     }
 
     return 0;
+}
+
+bool Scanner::scanDir(const std::filesystem::path&& dir)
+{
+    for (const auto& entry :
+         std::filesystem::directory_iterator {std::move(dir)})
+    {
+        if (entry.is_directory())
+        {
+            if (!scanDir(std::move(entry.path()))) return false;
+        }
+        else if (entry.is_regular_file())
+        {
+            if (!scanFile(std::move(entry.path()))) return false;
+        }
+        else
+        {
+            std::cout << "Invalid file found: " << entry << '\n';
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Scanner::scanFile(const std::filesystem::path&& file)
+{
+    // placeholder
+    std::cout << "Scanning " << file << '\n';
+
+    return true;
 }

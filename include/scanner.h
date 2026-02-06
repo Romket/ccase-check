@@ -47,6 +47,9 @@ public:
 private:
     int loadConfig();
 
+    bool scanDir(const std::filesystem::path&& dir);
+    bool scanFile(const std::filesystem::path&& file);
+
     std::unordered_map<Contexts, std::regex> _patternMap;
 
     std::filesystem::path              _configPath;
